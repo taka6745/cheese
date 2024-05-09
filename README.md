@@ -2,6 +2,8 @@
 
 This document provides instructions on setting up, running, and testing the Cheese application, which includes both a React frontend and an Express backend, using Docker Compose. It also includes details on accessing the Swagger UI for API documentation.
 
+### Hover over cheese for info
+
 ## Setup and Run the Application
 
 ### Using Docker Compose
