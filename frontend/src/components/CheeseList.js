@@ -9,8 +9,9 @@ const CheeseList = () => {
     useEffect(() => {
         const fetchCheeses = async () => {
             setIsLoading(true);
+            // Using a timestamp to prevent caching of the GET request.
+            const response = await fetch(`http://localhost:3000/api/cheeses?timestamp=${new Date().getTime()}`);
             try {
-                const response = await fetch('http://localhost:3000/api/cheeses');
                 if (!response.ok) {
                     throw new Error('Could not fetch cheeses!');
                 }
@@ -24,7 +25,7 @@ const CheeseList = () => {
         };
 
         fetchCheeses();
-    }, []);
+    }, []); // The empty array means this effect runs once per component mount.
 
     if (isLoading) {
         return <p>Loading...</p>;
@@ -36,14 +37,14 @@ const CheeseList = () => {
 
     return (
         <div className="cheese-list">
-            {cheeses.slice(0, 5).map((cheese) => (
-                <div key={cheese.id} className="cheese-card"> 
+            {cheeses.map((cheese) => ( // Removed the slice to display all cheeses
+                <div key={cheese.id} className="cheese-card">
                     <img src={`http://localhost:3000/img/${cheese.image}`} alt={cheese.name} />
-                    <div className="cheese-info"> 
-                        <p className="cheese-name">{cheese.name}</p> 
+                    <div className="cheese-info">
+                        <p className="cheese-name">{cheese.name}</p>
                         <p>Price per kilo: {cheese.pricePerKilo}</p>
                         <p>Color: {cheese.color}</p>
-                    </div> 
+                    </div>
                 </div>
             ))}
         </div>
