@@ -109,7 +109,7 @@ Given more time, several enhancements and features could be implemented to impro
 ## Frontend Enhancements
 
 1. **Enhanced Styling and User Interface**
-   - Implement a more sophisticated design with advanced CSS and interactive elements using libraries like Tailwind CSS or Material-UI.
+   - Implement a more better design with advanced CSS and interactive elements using libraries like Tailwind CSS or Material-UI.
    - Improve responsiveness to offer a better user experience on various devices including tablets and smartphones.
 
 2. **Additional Functionalities**
@@ -121,7 +121,7 @@ Given more time, several enhancements and features could be implemented to impro
 
 1. **Database Integration**
    - Replace the in-memory array with a more robust database solution such as PostgreSQL or MongoDB for persistent data storage.
-   - Implement CRUD (Create, Read, Update, Delete) operations through the API to interact with the database, allowing for real-time data updates and retrieval.
+
 
 2. **API Functionality Expansion**
    - **Authentication and Authorization**: Add user authentication and authorization to manage access to different parts of the API.
