@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import './PriceCalculator.css';
+import './PriceCalculator.css'; 
 
 const PriceCalculator = () => {
   const [cheeses, setCheeses] = useState([]);
-  const [selectedCheese, setSelectedCheese] = useState('');
+  const [selectedCheeseId, setSelectedCheeseId] = useState('');
+  const [currentPrice, setCurrentPrice] = useState(0);
   const [weight, setWeight] = useState('');
   const [totalPrice, setTotalPrice] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +19,7 @@ const PriceCalculator = () => {
         }
         const data = await response.json();
         setCheeses(data);
-        setSelectedCheese(data[0]?.id); // Automatically select the first cheese
+        setSelectedCheeseId(data[0]?.id || ''); 
       } catch (error) {
         setError(error.message);
       } finally {
@@ -29,8 +30,29 @@ const PriceCalculator = () => {
     fetchCheeses();
   }, []);
 
+  useEffect(() => {
+    const fetchPrice = async () => {
+      if (!selectedCheeseId) return;
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/cheeses/${selectedCheeseId}`);
+        if (!response.ok) {
+          throw new Error('Could not fetch cheese price!');
+        }
+        const data = await response.json();
+        setCurrentPrice(data.pricePerKilo);
+      } catch (error) {
+        console.error('Error fetching price:', error);
+        setCurrentPrice(0); 
+      }
+    };
+
+    fetchPrice();
+  }, [selectedCheeseId]); 
+
   const handleCheeseChange = (event) => {
-    setSelectedCheese(event.target.value);
+    setSelectedCheeseId(event.target.value);
+    resetPriceState();
   };
 
   const handleWeightChange = (event) => {
@@ -38,11 +60,12 @@ const PriceCalculator = () => {
   };
 
   const calculatePrice = () => {
-    const cheese = cheeses.find(c => c.id === selectedCheese);
-    if (!cheese) return; // guard clause in case cheese isn't found
+    setTotalPrice(weight * currentPrice);
+  };
 
-    const pricePerKilo = cheese.pricePerKilo;
-    setTotalPrice(weight * pricePerKilo);
+  const resetPriceState = () => {
+    setCurrentPrice(0);
+    setTotalPrice(0);
   };
 
   if (isLoading) {
@@ -57,15 +80,24 @@ const PriceCalculator = () => {
     <div className="price-calculator">
       <h2>Price Calculator</h2>
       <label htmlFor="cheese-select">Cheese:</label>
-      <select id="cheese-select" value={selectedCheese} onChange={handleCheeseChange}>
-        {cheeses.map(cheese => (
-          <option key={cheese.id} value={cheese.id}>{cheese.name}</option>
+      <select id="cheese-select" value={selectedCheeseId} onChange={handleCheeseChange}> 
+        {cheeses.map((cheese) => (
+          <option key={cheese.id} value={cheese.id}>
+            {cheese.name}
+          </option>
         ))}
       </select>
-      <br/>
+      <br />
       <label htmlFor="weight">Weight (kg):</label>
-      <input type="number" id="weight" value={weight} onChange={handleWeightChange} step="0.01" min="0" />
-      <br/>
+      <input
+        type="number"
+        id="weight"
+        value={weight}
+        onChange={handleWeightChange}
+        step="0.01"
+        min="0"
+      />
+      <br />
       <button onClick={calculatePrice}>Calculate</button>
       <h3>Total Price: ${totalPrice.toFixed(2)}</h3>
     </div>
