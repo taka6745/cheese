@@ -1,0 +1,43 @@
+/* PriceCalculator.css */
+.price-calculator {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    max-width: 300px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.price-calculator label {
+    font-weight: bold;
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.price-calculator select, .price-calculator input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.price-calculator button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.price-calculator button:hover {
+    background-color: #0056b3;
+}
+
+.price-calculator h3 {
+    margin-top: 20px;
+}

@@ -1,0 +1,52 @@
+
+.cheese-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px;
+    justify-items: center; 
+}
+
+.cheese-card {
+    border: 1px solid #ddd;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    width: 200px; 
+    background-color: white; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+    position: relative; 
+    overflow: hidden; 
+}
+
+.cheese-card img {
+    width: 200px; 
+    height: 200px;
+    object-fit: cover; 
+}
+
+.cheese-info {
+    position: absolute;
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
+    padding: 10px; 
+}
+
+.cheese-card:hover .cheese-info {
+    opacity: 1; 
+}
+
+.cheese-name {
+    margin-top: 10px; 
+    font-weight: bold; 
+}
