@@ -1,0 +1,36 @@
+.header {
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #333;
+  }
+  
+  .header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .header nav ul li {
+    display: inline;
+  }
+  
+  .header nav ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1em;
+  }
+  
+  .header nav ul li a:hover {
+    text-decoration: underline;
+  }
+  
