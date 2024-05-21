@@ -1,50 +1,14 @@
+// backend/routes/cheeseRoutes.js
+
 const express = require('express');
 const router = express.Router();
-
-/**
- * @swagger
- * /api/cheeses:
- * components:
- *   schemas:
- *     Cheese:
- *       type: object
- *       required:
- *         - name
- *         - pricePerKilo
- *         - color
- *         - image
- *       properties:
- *         id:
- *           type: integer
- *           description: The auto-generated id of the cheese.
- *         name:
- *           type: string
- *           description: The name of the cheese.
- *         pricePerKilo:
- *           type: number
- *           description: The price per kilo of the cheese.
- *         color:
- *           type: string
- *           description: The color of the cheese.
- *         image:
- *           type: string
- *           description: URL to the image of the cheese.
- *       example:
- *         id: 1
- *         name: "Cheddar"
- *         pricePerKilo: 15
- *         color: "Yellow"
- *         image: "url-to-cheddar-image"
- */
-
-// In-memory array to store cheeses
-let cheeses = [
-    { id: 1, name: 'Cheddar', pricePerKilo: 15, color: 'Yellow', image: '1.png' },
-    { id: 2, name: 'Mozzarella', pricePerKilo: 12, color: 'White', image: '5.png' },
-    { id: 3, name: 'Gouda', pricePerKilo: 16, color: 'Light Yellow', image: '2.png' },
-    { id: 4, name: 'Blue Cheese', pricePerKilo: 20, color: 'Blue', image: '4.png' },
-    { id: 5, name: 'Brie', pricePerKilo: 18, color: 'Cream', image: '3.png' }
-];
+const mongoose = require('mongoose');
+const Cheese = require('../models/cheese'); 
+// Connect to MongoDB
+mongoose.connect('mongodb://mongo:27017/cheesedb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 /**
  * @swagger
@@ -61,8 +25,9 @@ let cheeses = [
  *               items:
  *                 $ref: '#/components/schemas/Cheese'
  */
-router.get('/cheeses', (req, res) => {
-    res.json(cheeses);
+router.get('/cheeses', async (req, res) => {
+  const cheeses = await Cheese.find();
+  res.json(cheeses);
 });
 
 /**
@@ -87,12 +52,12 @@ router.get('/cheeses', (req, res) => {
  *       404:
  *         description: The cheese was not found
  */
-router.get('/cheeses/:id', (req, res) => {
-    const cheese = cheeses.find(c => c.id === parseInt(req.params.id));
-    if (!cheese) {
-        return res.status(404).send('The cheese with the given ID was not found.');
-    }
-    res.json(cheese);
+router.get('/cheeses/:id', async (req, res) => {
+  const cheese = await Cheese.findById(req.params.id);
+  if (!cheese) {
+    return res.status(404).send('The cheese with the given ID was not found.');
+  }
+  res.json(cheese);
 });
 
 /**
@@ -110,17 +75,16 @@ router.get('/cheeses/:id', (req, res) => {
  *       201:
  *         description: The cheese was successfully created
  */
-router.post('/cheeses', (req, res) => {
-    const { name, pricePerKilo, color, image } = req.body;
-    const cheese = {
-        id: cheeses.length + 1,
-        name,
-        pricePerKilo,
-        color,
-        image
-    };
-    cheeses.push(cheese);
-    res.status(201).send(cheese);
+router.post('/cheeses', async (req, res) => {
+  const { name, pricePerKilo, color, image } = req.body;
+  const cheese = new Cheese({
+    name,
+    pricePerKilo,
+    color,
+    image,
+  });
+  await cheese.save();
+  res.status(201).send(cheese);
 });
 
 /**
@@ -147,19 +111,20 @@ router.post('/cheeses', (req, res) => {
  *       404:
  *         description: The cheese was not found
  */
-router.put('/cheeses/:id', (req, res) => {
-    const cheese = cheeses.find(c => c.id === parseInt(req.params.id));
-    if (!cheese) {
-        return res.status(404).send('The cheese with the given ID was not found.');
-    }
+router.put('/cheeses/:id', async (req, res) => {
+  const cheese = await Cheese.findById(req.params.id);
+  if (!cheese) {
+    return res.status(404).send('The cheese with the given ID was not found.');
+  }
 
-    const { name, pricePerKilo, color, image } = req.body;
-    cheese.name = name;
-    cheese.pricePerKilo = pricePerKilo;
-    cheese.color = color;
-    cheese.image = image;
+  const { name, pricePerKilo, color, image } = req.body;
+  cheese.name = name;
+  cheese.pricePerKilo = pricePerKilo;
+  cheese.color = color;
+  cheese.image = image;
 
-    res.send(cheese);
+  await cheese.save();
+  res.send(cheese);
 });
 
 /**
@@ -180,14 +145,16 @@ router.put('/cheeses/:id', (req, res) => {
  *       404:
  *         description: The cheese was not found
  */
-router.delete('/cheeses/:id', (req, res) => {
-    const cheeseIndex = cheeses.findIndex(c => c.id === parseInt(req.params.id));
-    if (cheeseIndex === -1) {
+router.delete('/cheeses/:id', async (req, res) => {
+    try {
+      const cheese = await Cheese.findByIdAndDelete(req.params.id);
+      if (!cheese) {
         return res.status(404).send('The cheese with the given ID was not found.');
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).send('Server error.');
     }
-
-    cheeses.splice(cheeseIndex, 1);
-    res.status(204).send();
-});
-
+  });
+  
 module.exports = router;

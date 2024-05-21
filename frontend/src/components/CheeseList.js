@@ -26,6 +26,12 @@ const CheeseList = () => {
     fetchCheeses();
   }, []);
 
+  const handleImageError = (e) => {
+    if (!e.target.src.includes('default-image-url.jpg')) {
+      e.target.src = 'default-image-url.jpg';
+    }
+  };
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -39,8 +45,8 @@ const CheeseList = () => {
       {cheeses.map((cheese) => {
         const imageUrl = cheese.image.startsWith('http') ? cheese.image : `http://localhost:3000/img/${cheese.image}`;
         return (
-          <div key={cheese.id} className="cheese-card">
-            <img src={imageUrl} alt={cheese.name} onError={(e) => e.target.src = 'default-image-url.jpg'} />
+          <div key={cheese._id} className="cheese-card">
+            <img src={imageUrl} alt={cheese.name} onError={handleImageError} />
             <div className="cheese-info">
               <p className="cheese-name">{cheese.name}</p>
               <p>Price per kilo: {cheese.pricePerKilo}</p>

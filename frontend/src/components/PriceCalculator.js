@@ -19,7 +19,7 @@ const PriceCalculator = () => {
         }
         const data = await response.json();
         setCheeses(data);
-        setSelectedCheeseId(data[0]?.id || ''); 
+        setSelectedCheeseId(data[0]?._id || ''); 
       } catch (error) {
         setError(error.message);
       } finally {
@@ -82,7 +82,7 @@ const PriceCalculator = () => {
       <label htmlFor="cheese-select">Cheese:</label>
       <select id="cheese-select" value={selectedCheeseId} onChange={handleCheeseChange}> 
         {cheeses.map((cheese) => (
-          <option key={cheese.id} value={cheese.id}>
+          <option key={cheese._id} value={cheese._id}>
             {cheese.name}
           </option>
         ))}

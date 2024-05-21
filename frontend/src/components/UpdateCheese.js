@@ -3,7 +3,7 @@ import axios from 'axios';
 import './UpdateCheese.css';
 
 function UpdateCheese({ onUpdateSuccess }) {
-  const [cheeseIds, setCheeseIds] = useState([]);
+  const [cheeses, setCheeses] = useState([]);
   const [selectedCheeseId, setSelectedCheeseId] = useState('');
   const [cheese, setCheese] = useState({
     name: '',
@@ -15,22 +15,21 @@ function UpdateCheese({ onUpdateSuccess }) {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
-  // Fetch all cheese IDs
+  // Fetch all cheese details
   useEffect(() => {
-    const fetchCheeseIds = async () => {
+    const fetchCheeses = async () => {
       setIsLoading(true);
       try {
         const response = await axios.get('http://localhost:3000/api/cheeses');
-        const ids = response.data.map(cheese => cheese.id);
-        setCheeseIds(ids);
+        setCheeses(response.data);
       } catch (error) {
-        setError('Failed to fetch cheese IDs.');
+        setError('Failed to fetch cheeses.');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchCheeseIds();
+    fetchCheeses();
   }, []);
 
   // Fetch details of the selected cheese
@@ -88,8 +87,8 @@ function UpdateCheese({ onUpdateSuccess }) {
           onChange={(e) => setSelectedCheeseId(e.target.value)}
         >
           <option value="" disabled>Select a cheese</option>
-          {cheeseIds.map((id) => (
-            <option key={id} value={id}>{id}</option>
+          {cheeses.map((cheese) => (
+            <option key={cheese._id} value={cheese._id}>{cheese.name}</option>
           ))}
         </select>
       </div>

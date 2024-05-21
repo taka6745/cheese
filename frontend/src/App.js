@@ -29,6 +29,8 @@ function App() {
         return <UpdateCheese onUpdateSuccess={handleUpdateSuccess} />;
       case 'delete':
         return <DeleteCheese onDeleteSuccess={handleDeleteSuccess} />;
+      case 'calculate':
+        return <PriceCalculator />;
       default:
         return <CheeseList />;
     }
@@ -39,7 +41,6 @@ function App() {
       <Header setView={setView} />
       <main>
         {renderView()}
-        <PriceCalculator />
       </main>
       <Footer />
     </div>
